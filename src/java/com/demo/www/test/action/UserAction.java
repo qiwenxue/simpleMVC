@@ -27,8 +27,10 @@ public class UserAction extends BaseAction {
       int id = userService.save(con, user);
       if ( id >0 ) {
         setResult(0, "成功");
+        return SUCCESS;
       } else {
         setResult(1, "失败");
+        return ERROR;
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -37,20 +39,22 @@ public class UserAction extends BaseAction {
     } finally {
       DBConnectionUtil.close(con);
     }
-    return SUCCESS;
   }
   
   @Method(name="findUser", type=Method.GET)
   public String find() throws Exception {
     Connection con = null;
+    String status = "";
     try {
       con = DBConnectionUtil.getDBConnection();
       User us = userService.findUser(con, user.getId());
       if ( us != null ) {
         JSONObject data = JSONObject.fromObject(us);
         setResult(0, data, "成功");
+        status = SUCCESS;
       } else {
         setResult(1, "失败");
+        status = ERROR;
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -58,6 +62,6 @@ public class UserAction extends BaseAction {
     } finally {
       DBConnectionUtil.close(con);
     }
-    return SUCCESS;
+    return status;
   }
 }
